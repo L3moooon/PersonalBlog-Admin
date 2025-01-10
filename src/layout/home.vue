@@ -1,5 +1,5 @@
 <template>
-  <router-view></router-view>
+  <div>我是home</div>
 </template>
 
 <script setup></script>
