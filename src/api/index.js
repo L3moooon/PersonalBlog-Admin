@@ -1,7 +1,5 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
-// import useUserStore from "@/store/modules/user.js";
-//创建axios实例
 
 const BASE_API = 'http://localhost:3001'
 let request = axios.create({
@@ -10,14 +8,24 @@ let request = axios.create({
 });
 
 request.interceptors.request.use((config) => {
-  //获取用户相关的小仓库，获取token，登录成功以后携带给服务器
-  // const userStore = useUserStore();
+  //获取token，登录成功以后携带给服务器
+  const token = localStorage.getItem('identify')
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1])); // 解析 token 的 payload
+    console.log(payload);
+    const expirationTime = payload.exp * 1000; // 转换为毫秒
+    const currentTime = Date.now();
 
-  // if (userStore.token) {
-  //   config.headers.token = userStore.token;
-  // }
-  //config配置对象，headers请求头，经常给服务器端携带公共参数
-  //返回配置对象
+    if (currentTime > expirationTime) {
+      console.log('Token 已过期');
+      localStorage.removeItem('token'); // 清除过期的 token
+      window.location.href = '/login'; // 跳转到登录页
+    } else {
+      console.log('Token 未过期');
+      config.headers.token = token;
+
+    }
+  }
   return config;
 });
 

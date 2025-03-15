@@ -35,7 +35,7 @@
       <el-form
         :model="registerForm"
         label-position="top">
-        <el-form-item label="账号:">
+        <el-form-item label="昵称:">
           <el-input v-model="registerForm.name" />
         </el-form-item>
         <el-form-item label="账号:">
@@ -57,8 +57,13 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { login as userLogin } from "../api/login";
+import { ElMessage } from "element-plus";
+
+const router = useRouter();
+
 const showRegister = ref(false);
 const loginForm = reactive({
   account: "", //邮箱账号
@@ -75,12 +80,39 @@ const login = async () => {
     email: loginForm.account,
     password: loginForm.password,
   });
+
   console.log(data);
+  if (data.status == 1) {
+    //存储token至local
+    localStorage.setItem("identify", data.token);
+    //清空表单-跳转至home页
+    router.push("/home");
+
+    loginForm.account = "";
+    loginForm.password = "";
+  } else {
+    ElMessage({
+      type: "error",
+      message: "用户名或密码错误",
+    });
+  }
 };
 //注册
 const register = () => {
   showRegister.value = true;
 };
+onMounted(() => {
+  // 在登录页加载时调用
+  checkLoginStatus();
+});
+
+// 检查登录状态
+function checkLoginStatus() {
+  const token = localStorage.getItem("identify");
+  if (token) {
+    window.location.href = "/"; // 如果已登录，重定向到仪表盘
+  }
+}
 </script>
 
 <style lang="scss" scoped>
