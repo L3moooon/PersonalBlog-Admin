@@ -11,7 +11,24 @@
     </div>
     <div class="right">
       <!-- 右上 -->
-      <div class="right-top"></div>
+      <div class="right-top">
+        <el-popover
+          class="box-item"
+          trigger="click"
+          placement="bottom">
+          <template #reference>
+            <div class="user">
+              <img
+                src="/src/assets/personal.png"
+                alt="" />
+              <span>{{ user }}</span>
+            </div>
+          </template>
+          <template #default>
+            <div @click="logout">退出登录</div>
+          </template>
+        </el-popover>
+      </div>
       <!-- 右下 -->
       <div class="right-down">
         <router-view></router-view>
@@ -21,8 +38,21 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from "vue";
 import { routes } from "@/router/routes";
+import { useRouter } from "vue-router";
 import MenuList from "@/components/menu/menu-list.vue";
+const user = ref();
+const router = useRouter();
+const logout = () => {
+  localStorage.removeItem("user");
+  router.push("/login");
+};
+
+onMounted(() => {
+  user.value = JSON.parse(localStorage.getItem("user")).name;
+  console.log(user.value);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -41,8 +71,17 @@ import MenuList from "@/components/menu/menu-list.vue";
     width: 85%;
     background-color: #ccc;
     .right-top {
-      height: 80px;
+      height: 50px;
       background-color: antiquewhite;
+      overflow: hidden;
+      .user {
+        width: 100px;
+        cursor: pointer;
+        margin-left: auto;
+        img {
+          width: 25px;
+        }
+      }
     }
   }
 }

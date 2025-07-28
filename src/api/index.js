@@ -9,21 +9,21 @@ let request = axios.create({
 
 request.interceptors.request.use((config) => {
   //获取token，登录成功以后携带给服务器
-  const token = localStorage.getItem('identify')
-  if (token) {
-    const payload = JSON.parse(atob(token.split('.')[1])); // 解析 token 的 payload
+  const user = JSON.parse(localStorage.getItem('user'))
+
+  if (user && user.token) {
+    const payload = JSON.parse(atob(user.token.split('.')[1])); // 解析 token 的 payload
     console.log(payload);
     const expirationTime = payload.exp * 1000; // 转换为毫秒
     const currentTime = Date.now();
 
     if (currentTime > expirationTime) {
       console.log('Token 已过期');
-      localStorage.removeItem('token'); // 清除过期的 token
+      localStorage.removeItem('user'); // 清除过期的 token
       window.location.href = '/login'; // 跳转到登录页
     } else {
       console.log('Token 未过期');
-      config.headers.token = token;
-
+      config.headers.token = user.token;
     }
   }
   return config;
@@ -36,6 +36,7 @@ request.interceptors.response.use(
   (error) => {
     let message = "";
     let status = error.response;
+    console.log(error);
     switch (status) {
       case 401:
         message = "TOKEN过期";

@@ -1,8 +1,7 @@
 import request from "./index";
-export const getAllArticle = (data) => {
+export const getAllArticle = () => {
   return request({
-    url: '/login/login',
+    url: '/public/article',
     method: 'post',
-    data,
   })
 }
