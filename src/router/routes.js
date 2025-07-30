@@ -66,14 +66,6 @@ export const routes = [
           hidden: false
         },
       },
-      {
-        path: '/tag',
-        component: () => import('@/view/tag.vue'),
-        meta: {
-          name: '标签管理',
-          hidden: false
-        },
-      }
     ]
   },
 
@@ -86,6 +78,14 @@ export const routes = [
       hidden: false
     },
     children: [
+      {
+        path: '/person',
+        component: () => import('@/view/personInfo.vue'),
+        meta: {
+          name: '个人信息设置',
+          hidden: false
+        },
+      },
       {
         path: '/theme',
         component: () => import('@/view/theme.vue'),
