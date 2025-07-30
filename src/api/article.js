@@ -6,6 +6,14 @@ export const getAllArticle = () => {
     method: 'post',
   })
 }
+//新增文章
+export const addArticle = (data) => {
+  return request({
+    url: '/public/addArticle',
+    method: 'post',
+    data
+  })
+}
 
 //获取所有标签列表
 export const getAllTag = () => {
@@ -28,12 +36,5 @@ export const delTag = (data) => {
     url: '/admin/tag/delTag',
     method: 'post',
     data
-  })
-}
-//修改标签
-export const editTag = () => {
-  return request({
-    url: '/admin/tag/editTag',
-    method: 'post',
   })
 }

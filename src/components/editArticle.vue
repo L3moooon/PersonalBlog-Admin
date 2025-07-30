@@ -134,50 +134,69 @@
       <div class="catalog"></div>
       <div
         class="text"
+        id="edit-content"
         contenteditable="true"></div>
       <div class="pub-setting">
-        <el-form>
+        <el-form
+          :model="form"
+          label-width="auto">
+          <el-form-item label="添加标题">
+            <el-input v-model="form.title" />
+          </el-form-item>
           <el-form-item label="文章标签">
             <el-select
-              v-model="value"
+              v-model="form.tags"
               multiple
-              placeholder="Select"
+              placeholder="请选择"
               style="width: 240px">
               <el-option
-                v-for="item in colors"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                <div class="flex items-center">
-                  <el-tag
-                    :color="item.value"
-                    style="margin-right: 8px"
-                    size="small" />
-                  <span :style="{ color: item.value }">{{ item.label }}</span>
-                </div>
+                v-for="item in props.tagList"
+                :key="item.id"
+                :label="item.tag_name"
+                :value="item.id">
               </el-option>
-              <template #tag>
-                <el-tag
-                  v-for="color in value"
-                  :key="color"
-                  :color="color" />
-              </template>
             </el-select>
           </el-form-item>
           <el-form-item label="添加封面">
             <el-upload></el-upload>
           </el-form-item>
-          <el-form-item label="文章摘要"><el-input /> </el-form-item>
-          <el-form-item label="状态"><el-input /> </el-form-item>
+          <el-form-item label="文章简介">
+            <el-input v-model="form.abstract" />
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-radio-group v-model="form.status">
+              <el-radio
+                value="0"
+                size="large">
+                仅自己可见
+              </el-radio>
+              <el-radio
+                value="1"
+                size="large">
+                所有人可见
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
         </el-form>
+        <el-button @click="submitArticle">提交</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, reactive } from "vue";
+import { addArticle } from "../api/article";
+import { ElMessage } from "element-plus";
+const props = defineProps(["tagList"]);
 
+const form = reactive({
+  title: "",
+  tags: [],
+  abstract: "",
+  status: 0,
+  cover_img: "",
+});
 const applyStyle = (className) => {
   const selectText = window.getSelection();
   // console.log(selectText);
@@ -200,6 +219,44 @@ const applyStyle = (className) => {
   // 清除选中状态
   selectText.removeAllRanges();
 };
+const submitArticle = async () => {
+  //获取文本编辑区的内容
+  const content = document.getElementById("edit-content").innerHTML;
+  // console.log(content);
+  const _content = sanitizeContent(content);
+  const { status } = await addArticle({
+    title: form.title,
+    cover_img: form.cover_img,
+    abstract: form.abstract,
+    content: _content,
+    status: form.status,
+    tags: form.tags,
+  });
+  if (status == 1) {
+    ElMessage.success("提交成功");
+  }
+};
+// 清理编辑区内容（防 XSS）
+function sanitizeContent(html) {
+  // 简单过滤：只保留安全标签和属性（实际项目建议用 bleach/dompurify 库）
+  const allowedTags = ["b", "i", "u", "a", "img", "p", "br"];
+  const allowedAttrs = ["href", "src", "style"];
+  return html.replace(/<(\/?)(\w+)([^>]*?)>/g, (match, slash, tag, attrs) => {
+    if (!allowedTags.includes(tag)) return ""; // 过滤不允许的标签
+    // 过滤不允许的属性
+    const cleanAttrs = attrs.replace(
+      /(\w+)=["'].*?["']/g,
+      (attrMatch, attr) => {
+        return allowedAttrs.includes(attr) ? attrMatch : "";
+      }
+    );
+    return `<${slash}${tag}${cleanAttrs}>`;
+  });
+}
+
+onMounted(() => {
+  console.log(props.tagList);
+});
 </script>
 
 <style lang="scss" scoped>

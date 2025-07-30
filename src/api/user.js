@@ -7,3 +7,11 @@ export const getList = (data) => {
     data,
   })
 }
+
+//获取用户主题相关信息
+export const getThemeInfo = () => {
+  return request({
+    url: '/web/user/info',
+    method: 'post',
+  })
+}

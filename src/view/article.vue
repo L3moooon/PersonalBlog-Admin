@@ -86,7 +86,7 @@
       :show-close="false"
       title="编辑文章">
       <template #default>
-        <EditArticle></EditArticle>
+        <EditArticle :tagList="tagList"></EditArticle>
       </template>
     </el-dialog>
     <el-dialog

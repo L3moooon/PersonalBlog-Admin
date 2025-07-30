@@ -79,14 +79,6 @@ export const routes = [
     },
     children: [
       {
-        path: '/person',
-        component: () => import('@/view/personInfo.vue'),
-        meta: {
-          name: '个人信息设置',
-          hidden: false
-        },
-      },
-      {
         path: '/theme',
         component: () => import('@/view/theme.vue'),
         meta: {
