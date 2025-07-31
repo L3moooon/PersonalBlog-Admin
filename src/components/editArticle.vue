@@ -21,6 +21,7 @@
       <div
         class="text"
         id="edit-content"
+        v-html="form.content"
         contenteditable="true"></div>
       <div class="pub-setting">
         <el-form
@@ -44,7 +45,27 @@
             </el-select>
           </el-form-item>
           <el-form-item label="添加封面">
-            <el-upload></el-upload>
+            <el-upload
+              class="uploader"
+              :http-request="handleUploadPortrait"
+              accept=".jpg,.png"
+              :show-file-list="false"
+              :before-upload="beforeAvatarUpload">
+              <template #viewer>
+                <div>123</div>
+              </template>
+              <el-image
+                v-if="form.cover_img"
+                :src="form.cover_img"
+                fit="fill"
+                @click.stop
+                :preview-src-list="[form.cover_img]"></el-image>
+              <img
+                v-else
+                class="add"
+                src="/src/assets/icons/add.png"
+                alt="" />
+            </el-upload>
           </el-form-item>
           <el-form-item label="文章简介">
             <el-input v-model="form.abstract" />
@@ -73,15 +94,16 @@
 <script setup>
 import { onMounted, ref, reactive } from "vue";
 import { addArticle } from "../api/article";
+import { upload } from "/src/api/public";
 import { ElMessage } from "element-plus";
-const props = defineProps(["tagList"]);
+const props = defineProps(["tagList", "content"]);
 
 const form = reactive({
-  title: "",
-  tags: [],
-  abstract: "",
-  status: 0,
-  cover_img: "",
+  // title: "",
+  // tags: [],
+  // abstract: "",
+  // status: 0,
+  // cover_img: "",
 });
 const applyStyle = (className) => {
   const selectText = window.getSelection();
@@ -254,9 +276,25 @@ function sanitizeContent(html) {
     return `<${slash}${tag}${cleanAttrs}>`;
   });
 }
-
+const handleUploadPortrait = async (e) => {
+  const { file } = e;
+  // 创建FormData对象
+  const formData = new FormData();
+  formData.append("file", file);
+  // 调用封装好的request
+  const { data, status } = await upload(formData);
+  if (status == 1) {
+    console.log(data);
+    form.cover_img = data.url;
+  }
+};
+const beforeAvatarUpload = () => {
+  //检查格式
+  return true;
+};
 onMounted(() => {
-  console.log(props.tagList);
+  console.log(props.tagList, props.content);
+  Object.assign(form, props.content);
 });
 </script>
 

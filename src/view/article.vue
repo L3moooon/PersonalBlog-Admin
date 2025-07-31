@@ -99,7 +99,9 @@
         </div>
       </template>
       <template #default>
-        <EditArticle :tagList="tagList"></EditArticle>
+        <EditArticle
+          :tagList="tagList"
+          :content="content"></EditArticle>
       </template>
     </el-dialog>
     <!-- 标签管理 -->
@@ -147,6 +149,8 @@ const showTagDialog = ref(false);
 const articleStatus = ref(1); //文章状态
 
 const tagList = ref([]);
+const content = ref();
+
 const inputValue = ref("");
 const inputVisible = ref(false);
 const inputRef = ref(null);
@@ -159,6 +163,7 @@ const back = () => {
 };
 
 const editArticle = (row) => {
+  content.value = row;
   showArticleDialog.value = true;
 };
 const delArticle = (row) => {

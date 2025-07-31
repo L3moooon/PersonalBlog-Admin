@@ -18,7 +18,7 @@ export const getThemeInfo = () => {
 //更改用户主题相关信息
 export const modiThemeInfo = (data) => {
   return request({
-    url: '/web/user/modifyUser',
+    url: '/admin/webInfo/modifyUser',
     method: 'post',
     data
   })

@@ -26,35 +26,43 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col :span="4">
+      <el-col :span="24">
         <el-form-item label="用户头像">
-          <el-upload
-            class="uploader"
-            :http-request="handleUploadPortrait"
-            accept=".jpg,.png"
-            :show-file-list="false"
-            :before-upload="beforeAvatarUpload">
+          <el-col :span="3">
             <el-image
-              v-if="form.portrait"
+              class="preview-img"
               :src="form.portrait"
               fit="contain"
               @click.stop
-              :preview-src-list="[form.portrait]"></el-image>
-            <img
-              v-else
-              class="add"
-              src="/src/assets/icons/add.png"
-              alt="" />
-          </el-upload>
+              :preview-src-list="[form.portrait]">
+            </el-image
+          ></el-col>
+          <el-col :span="4">
+            <el-upload
+              class="uploader"
+              :http-request="handleUploadPortrait"
+              accept=".jpg,.png"
+              :show-file-list="false"
+              list-type="picture-card"
+              :limit="1"
+              on-exceed="handExceedImg"
+              :before-upload="beforeAvatarUpload">
+              <img
+                class="add"
+                src="/src/assets/icons/add.png"
+                alt="" />
+              <div class="tips">限制一张图片，新头像将覆盖旧头像</div>
+            </el-upload>
+          </el-col>
         </el-form-item>
       </el-col>
-      <el-col
-        :span="12"
-        :offset="1">
+    </el-row>
+    <el-row>
+      <el-col :span="24">
         <el-form-item label="展示页图片">
           <div class="upload-container">
             <el-image
-              class="preview"
+              class="preview-img"
               v-for="item in form.bg_img"
               :src="item"
               fit="cover"
@@ -157,7 +165,7 @@ import { upload } from "/src/api/public";
 import { getThemeInfo, modiThemeInfo } from "../api/user";
 import { getRandomPoem } from "../api/external";
 import { ElMessage } from "element-plus";
-
+import { Delete, Download, Plus, ZoomIn } from "@element-plus/icons-vue";
 const form = reactive({});
 
 //上传头像
@@ -173,6 +181,11 @@ const handleUploadPortrait = async (e) => {
     form.portrait = data.url;
   }
 };
+const showImgPreview = ref(false);
+const handlePictureCardPreview = (file) => {
+  console.log(file);
+};
+const handExceedImg = () => {};
 //上传首页背景图片
 const handleUploadBGI = async (e) => {
   const { file } = e;
@@ -229,22 +242,28 @@ const delLink = (index) => {
   width: 100%;
   display: flex;
   gap: 15px;
-  .preview {
-    width: 200px;
-  }
 }
-.uploader {
-  width: 150px;
-  height: 150px;
-  background-color: white;
+.preview-img {
+  width: 148px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
+}
+.uploader {
+  position: relative;
   .add {
-    width: 30px;
+    width: 50px;
+    position: absolute;
+    top: 30px;
     // padding: 120px;
   }
+  .tips {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+  }
 }
+
 .poem-container,
 .link-container {
   cursor: default;
