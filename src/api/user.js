@@ -15,3 +15,11 @@ export const getThemeInfo = () => {
     method: 'post',
   })
 }
+//更改用户主题相关信息
+export const modiThemeInfo = (data) => {
+  return request({
+    url: '/web/user/modifyUser',
+    method: 'post',
+    data
+  })
+}
