@@ -10,7 +10,6 @@ export default defineConfig({
     },
   },
   server: {
-    // port: 5173,
     open: false,
     headers: {
       'Cross-Origin-Opener-Policy': 'cross-origin',
@@ -21,6 +20,11 @@ export default defineConfig({
       //   changeOrigin: true, // 允许跨域
       //   // rewrite: (path) => path.replace(/^\/prod-api/, ''),
       // },
+      // '/poem-api': {
+      //   target: 'https://v1.jinrishici.com', // 目标API地址
+      //   changeOrigin: true, // 开启跨域
+      //   rewrite: (path) => path.replace(/^\/poem-api/, '') // 重写路径
+      // }
     },
   },
 })

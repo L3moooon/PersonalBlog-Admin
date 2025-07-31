@@ -58,6 +58,15 @@
     </el-form-item>
     <el-form-item label="诗句">
       <div v-for="item in form.saying">{{ item }}</div>
+      <el-input v-model="form.motto">
+        <template #suffix>
+          <img
+            class="random"
+            src="/src/assets/icons/random.png"
+            @click="getPoem"
+            alt="" />
+        </template>
+      </el-input>
     </el-form-item>
     <el-button>确定</el-button>
   </el-form>
@@ -67,6 +76,7 @@
 import { ref, reactive, onMounted } from "vue";
 import { upload } from "/src/api/public";
 import { getThemeInfo } from "../api/user";
+import { getRandomPoem } from "../api/external";
 
 const form = reactive({});
 const dialogImageUrl = ref("");
@@ -101,6 +111,11 @@ const getTheme = async () => {
     console.log(form);
   }
 };
+const poemInput = ref("");
+const getPoem = async () => {
+  const { data } = await getRandomPoem();
+  console.log(data);
+};
 onMounted(() => {
   getTheme();
 });
@@ -118,5 +133,9 @@ onMounted(() => {
     width: 30px;
     // padding: 120px;
   }
+}
+.random {
+  width: 15px;
+  cursor: pointer;
 }
 </style>

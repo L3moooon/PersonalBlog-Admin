@@ -1,132 +1,18 @@
 <template>
   <div class="edit-container">
     <div class="edit-func">
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/chexiao-copy.png"
-            style="width: 25px"
-            alt="" />
+      <div
+        class="func-item"
+        v-for="(item, index) in funcItem">
+        <div class="item">
+          <div class="img-container flex-center">
+            <img
+              :src="item.unactivated_icon"
+              :style="{ width: item.width + 'px' }"
+              alt="" />
+          </div>
+          <div>{{ item.name }}</div>
         </div>
-        <div>撤销</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/gl-redo3.png"
-            style="width: 25px"
-            alt="" />
-        </div>
-        <div>重做</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/history.png"
-            style="width: 22px"
-            alt="" />
-        </div>
-        <div>历史</div>
-      </div>
-      |
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/gl-title.png"
-            style="width: 20px"
-            alt="" />
-        </div>
-
-        <div>标题</div>
-      </div>
-      <div class="func-item">
-        <div
-          class="img-container flex-center"
-          @click="applyStyle('bold')">
-          <img
-            src="/src/assets/icons/gl-bold.png"
-            style="width: 20px"
-            alt="" />
-        </div>
-        <div>加粗</div>
-      </div>
-      <div class="func-item">
-        <div
-          class="img-container flex-center"
-          @click="applyStyle('red')">
-          <img
-            src="/src/assets/icons/gl-fontColor.png"
-            style="width: 22px"
-            alt="" />
-        </div>
-        <div>颜色</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/beijingyanse.png"
-            style="width: 25px"
-            alt="" />
-        </div>
-
-        <div>背景</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/qingxie.png"
-            style="width: 18px"
-            alt="" />
-        </div>
-        <div>倾斜</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/gl-underline.png"
-            style="width: 20px"
-            alt="" />
-        </div>
-
-        <div>下划线</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/shanchuxian.png"
-            style="width: 26px"
-            alt="" />
-        </div>
-        <div>删除线</div>
-      </div>
-      |
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/biaoshilei_tuxiang.png"
-            style="width: 20px"
-            alt="" />
-        </div>
-
-        <div>图像</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/shipin.png"
-            style="width: 24px"
-            alt="" />
-        </div>
-        <div>视频</div>
-      </div>
-      <div class="func-item">
-        <div class="img-container flex-center">
-          <img
-            src="/src/assets/icons/lianjie-copy.png"
-            style="width: 25px"
-            alt="" />
-        </div>
-        <div>链接</div>
       </div>
     </div>
     <div class="divide"></div>
@@ -219,6 +105,121 @@ const applyStyle = (className) => {
   // 清除选中状态
   selectText.removeAllRanges();
 };
+const funcItem = ref([
+  {
+    name: "撤销",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/chexiao-copy.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "重做",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/gl-redo3.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "历史",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/history.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "左对齐",
+    active_icon: "",
+    unactivated_icon: "",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "右对齐",
+    active_icon: "",
+    unactivated_icon: "",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "居中",
+    active_icon: "",
+    unactivated_icon: "",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "标题",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/gl-title.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "加粗",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/gl-bold.png",
+    width: "25",
+    function: applyStyle("bold"),
+  },
+  {
+    name: "颜色",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/gl-fontColor.png",
+    width: "25",
+    function: applyStyle("red"),
+  },
+  {
+    name: "背景",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/beijingyanse.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "倾斜",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/qingxie.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "下划线",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/gl-underline.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "删除线",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/shanchuxian.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "图像",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/biaoshilei_tuxiang.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "视频",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/shipin.png",
+    width: "25",
+    function: null,
+  },
+  {
+    name: "链接",
+    active_icon: "",
+    unactivated_icon: "/src/assets/icons/lianjie-copy.png",
+    width: "25",
+    function: null,
+  },
+]);
+
 const submitArticle = async () => {
   //获取文本编辑区的内容
   const content = document.getElementById("edit-content").innerHTML;

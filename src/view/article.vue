@@ -66,29 +66,43 @@
             link
             type="primary"
             size="small"
-            @click="editArticle(scope.row)"
-            >编辑</el-button
-          >
+            @click="editArticle(scope.row)">
+            编辑
+          </el-button>
           <el-button
             link
             type="primary"
             size="small"
-            @click="delArticle(scope.row)"
-            >删除</el-button
-          >
+            @click="delArticle(scope.row)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
+    <!-- 编辑文章 -->
     <el-dialog
       fullscreen
       v-model="showArticleDialog"
       class="article-dialog"
-      :show-close="false"
-      title="编辑文章">
+      :show-close="false">
+      <template #title>
+        <div class="top">
+          <el-button @click="back">
+            <img
+              class="back"
+              src="/src/assets/icons/back.png"
+              alt="" />
+            <span>返回</span>
+          </el-button>
+          <div>编辑文章</div>
+          <div></div>
+        </div>
+      </template>
       <template #default>
         <EditArticle :tagList="tagList"></EditArticle>
       </template>
     </el-dialog>
+    <!-- 标签管理 -->
     <el-dialog
       v-model="showTagDialog"
       title="标签管理">
@@ -138,6 +152,11 @@ const inputVisible = ref(false);
 const inputRef = ref(null);
 
 const changeStatus = () => {};
+
+const back = () => {
+  //TODO 保留草稿功能
+  showArticleDialog.value = false;
+};
 
 const editArticle = (row) => {
   showArticleDialog.value = true;
@@ -207,7 +226,14 @@ onMounted(() => {
     margin-bottom: 10px;
   }
 }
-
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .back {
+    width: 20px;
+  }
+}
 :deep(.el-dialog.article-dialog) {
   padding: 0;
   border-radius: 0;

@@ -1,7 +1,9 @@
 <template>
   <div>
     <div>本栏用于管理后台所有注册用户</div>
-    <el-table :data="userData">
+    <el-table
+      :data="userData"
+      show-overflow-tooltip>
       <el-table-column
         prop="id"
         label="id"
