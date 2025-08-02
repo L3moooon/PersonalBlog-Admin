@@ -1,7 +1,69 @@
 <template>
-  <div></div>
+  <div>
+    <div>本栏用于查看前台所有游客</div>
+    <el-table
+      :data="userData"
+      show-overflow-tooltip>
+      <el-table-column
+        prop="id"
+        label="id"
+        width="80"></el-table-column>
+      <el-table-column
+        prop="identify"
+        label="凭证"></el-table-column>
+      <el-table-column
+        prop="name"
+        label="昵称"></el-table-column>
+      <el-table-column
+        prop="ip"
+        label="ip"></el-table-column>
+      <el-table-column
+        prop="location"
+        label="归属地">
+        <template #default="scope">
+          <div v-if="scope.row.address">
+            {{ scope.row.address.province }}-{{ scope.row.address.city }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="agent"
+        label="登录设备"></el-table-column>
+      <el-table-column
+        prop="create_time"
+        label="创建时间">
+        <template #default="scope">
+          {{ timeFormatter(scope.row.create_time) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="last_login_time"
+        label="最后登录时间">
+        <template #default="scope">
+          {{ timeFormatter(scope.row.last_login_time) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="visited_count"
+        label="访问次数">
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted, ref } from "vue";
+import { getList } from "/src/api/visitor";
+import { timeFormatter } from "../utils/timeFormatter";
+const userData = ref();
+const getVisitorList = async () => {
+  const { data } = await getList();
+  userData.value = data;
+  console.log(userData.value);
+};
+onMounted(() => {
+  getVisitorList();
+});
+</script>
 
 <style lang="scss" scoped></style>

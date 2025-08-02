@@ -29,19 +29,45 @@
         label="标题" />
       <el-table-column
         prop="cover_img"
-        label="封面" />
+        label="封面">
+        <template #default="scope">
+          <el-image
+            class="table-img"
+            :src="scope.row.cover_img"
+            alt="" />
+        </template>
+      </el-table-column>
       <el-table-column
         prop="abstract"
         label="简介" />
       <el-table-column
         prop="tag"
-        label="标签" />
+        label="标签">
+        <template #default="scope">
+          <div class="tag-container">
+            <el-tag
+              v-for="(item, index) in scope.row.tag"
+              :key="index"
+              :disable-transitions="false">
+              {{ item }}
+            </el-tag>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="publish_date"
-        label="发布时间" />
+        label="发布时间">
+        <template #default="scope">
+          {{ timeFormatter(scope.row.publish_date) }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="last_edit_Date"
-        label="最后更新时间" />
+        label="最后更新时间">
+        <template #default="scope">
+          {{ timeFormatter(scope.row.last_edit_date) }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="view"
         label="访问量"
@@ -56,11 +82,13 @@
         min-width="120">
         <template #default="scope">
           <el-switch
-            v-model="articleStatus"
+            v-model="scope.row.status"
             inline-prompt
+            :active-value="1"
+            :inactive-value="0"
             active-text="展示"
             inactive-text="隐藏"
-            @change="changeStatus"
+            @change="changeStatus(scope.row)"
             style="margin-right: 10px" />
           <el-button
             link
@@ -81,26 +109,29 @@
     </el-table>
     <!-- 编辑文章 -->
     <el-dialog
+      class="article-dialog"
       fullscreen
       v-model="showArticleDialog"
-      class="article-dialog"
+      @closed="clearData"
+      :destroy-on-close="true"
       :show-close="false">
       <template #title>
         <div class="top">
-          <el-button @click="back">
+          <el-button
+            class="back"
+            @click="back">
             <img
-              class="back"
               src="/src/assets/icons/back.png"
               alt="" />
             <span>返回</span>
           </el-button>
-          <div>编辑文章</div>
-          <div></div>
+          <div>{{ EditOrAdd ? "发布文章" : "编辑文章" }}</div>
         </div>
       </template>
       <template #default>
         <EditArticle
           :tagList="tagList"
+          @Update:showArticleDialog="updateArticleDialog"
           :content="content"></EditArticle>
       </template>
     </el-dialog>
@@ -139,23 +170,40 @@
 
 <script setup>
 import { onMounted, ref, reactive, nextTick } from "vue";
-import { getAllArticle, getAllTag, addTag, delTag } from "@/api/article";
+import {
+  getAllArticle,
+  changeArticleStatus,
+  delArticle as del,
+  getAllTag,
+  addTag,
+  delTag,
+} from "@/api/article";
 import EditArticle from "../components/editArticle.vue";
+import { timeFormatter } from "/src/utils/timeFormatter";
 import { ElMessage } from "element-plus";
 
 const articleData = ref();
 const showArticleDialog = ref(false);
 const showTagDialog = ref(false);
-const articleStatus = ref(1); //文章状态
 
 const tagList = ref([]);
-const content = ref();
+const EditOrAdd = ref(0);
+const content = ref(null);
 
 const inputValue = ref("");
 const inputVisible = ref(false);
 const inputRef = ref(null);
 
-const changeStatus = () => {};
+const changeStatus = async (row) => {
+  console.log(row);
+  const { status } = await changeArticleStatus({
+    id: row.id,
+    status: row.status,
+  });
+  if (status == 1) {
+    ElMessage.success("操作成功");
+  }
+};
 
 const back = () => {
   //TODO 保留草稿功能
@@ -163,14 +211,28 @@ const back = () => {
 };
 
 const editArticle = (row) => {
+  EditOrAdd.value = 0;
   content.value = row;
   showArticleDialog.value = true;
 };
-const delArticle = (row) => {
-  showArticleDialog.value = true;
+const updateArticleDialog = (data) => {
+  showArticleDialog.value = data;
+  getArticleList();
+};
+const delArticle = async (row) => {
+  const { status } = await del({ id: row.id });
+  if (status == 1) {
+    ElMessage.success("删除成功");
+    getArticleList();
+  }
 };
 const publishArticle = () => {
   showArticleDialog.value = true;
+  EditOrAdd.value = 1;
+};
+const clearData = () => {
+  console.log("清除数据");
+  content.value = null;
 };
 const tagManagement = async () => {
   showTagDialog.value = true;
@@ -232,11 +294,16 @@ onMounted(() => {
   }
 }
 .top {
+  height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   .back {
-    width: 20px;
+    position: absolute;
+    left: 10px;
+    img {
+      width: 20px;
+    }
   }
 }
 :deep(.el-dialog.article-dialog) {

@@ -32,7 +32,7 @@
           </el-form-item>
           <el-form-item label="文章标签">
             <el-select
-              v-model="form.tags"
+              v-model="form.tag"
               multiple
               placeholder="请选择"
               style="width: 240px">
@@ -45,27 +45,29 @@
             </el-select>
           </el-form-item>
           <el-form-item label="添加封面">
-            <el-upload
-              class="uploader"
-              :http-request="handleUploadPortrait"
-              accept=".jpg,.png"
-              :show-file-list="false"
-              :before-upload="beforeAvatarUpload">
-              <template #viewer>
-                <div>123</div>
-              </template>
+            <div class="upload-container">
               <el-image
                 v-if="form.cover_img"
+                class="preview-img"
                 :src="form.cover_img"
-                fit="fill"
-                @click.stop
+                fit="cover"
+                limit="1"
                 :preview-src-list="[form.cover_img]"></el-image>
-              <img
-                v-else
-                class="add"
-                src="/src/assets/icons/add.png"
-                alt="" />
-            </el-upload>
+              <el-upload
+                class="uploader"
+                :http-request="handleUploadPortrait"
+                accept=".jpg,.png"
+                :show-file-list="false"
+                list-type="picture-card"
+                :limit="1"
+                :before-upload="beforeAvatarUpload">
+                <img
+                  class="add"
+                  src="/src/assets/icons/add.png"
+                  alt="" />
+                <div class="tips">限制一张图片，新封面将覆盖旧封面</div>
+              </el-upload>
+            </div>
           </el-form-item>
           <el-form-item label="文章简介">
             <el-input v-model="form.abstract" />
@@ -73,12 +75,12 @@
           <el-form-item label="状态">
             <el-radio-group v-model="form.status">
               <el-radio
-                value="0"
+                :value="0"
                 size="large">
                 仅自己可见
               </el-radio>
               <el-radio
-                value="1"
+                :value="1"
                 size="large">
                 所有人可见
               </el-radio>
@@ -93,11 +95,11 @@
 
 <script setup>
 import { onMounted, ref, reactive } from "vue";
-import { addArticle } from "../api/article";
+import { addOrEditArticle } from "../api/article";
 import { upload } from "/src/api/public";
 import { ElMessage } from "element-plus";
 const props = defineProps(["tagList", "content"]);
-
+const emits = defineEmits(["Update:showArticleDialog"]);
 const form = reactive({
   // title: "",
   // tags: [],
@@ -247,16 +249,18 @@ const submitArticle = async () => {
   const content = document.getElementById("edit-content").innerHTML;
   // console.log(content);
   const _content = sanitizeContent(content);
-  const { status } = await addArticle({
+  const { status } = await addOrEditArticle({
+    id: form.id,
     title: form.title,
     cover_img: form.cover_img,
     abstract: form.abstract,
     content: _content,
     status: form.status,
-    tags: form.tags,
+    tag: form.tag,
   });
   if (status == 1) {
     ElMessage.success("提交成功");
+    emits("Update:showArticleDialog", false);
   }
 };
 // 清理编辑区内容（防 XSS）
@@ -293,7 +297,6 @@ const beforeAvatarUpload = () => {
   return true;
 };
 onMounted(() => {
-  console.log(props.tagList, props.content);
   Object.assign(form, props.content);
 });
 </script>
@@ -360,5 +363,29 @@ onMounted(() => {
 }
 :deep(.red) {
   color: red;
+}
+.upload-container {
+  display: flex;
+  gap: 15px;
+}
+.preview-img {
+  width: 148px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+.uploader {
+  position: relative;
+  .add {
+    width: 50px;
+    position: absolute;
+    top: 30px;
+    // padding: 120px;
+  }
+  .tips {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+  }
 }
 </style>

@@ -51,6 +51,14 @@ export const routes = [
         },
       },
       {
+        path: '/role',
+        component: () => import('@/view/role.vue'),
+        meta: {
+          name: '角色管理',
+          hidden: false
+        },
+      },
+      {
         path: '/article',
         component: () => import('@/view/article.vue'),
         meta: {
@@ -74,7 +82,7 @@ export const routes = [
     redirect: '/theme',
     component: () => import('@/layout/home.vue'),
     meta: {
-      name: '网站设置',
+      name: '前台设置',
       hidden: false
     },
     children: [

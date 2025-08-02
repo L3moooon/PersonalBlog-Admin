@@ -6,15 +6,29 @@ export const getAllArticle = () => {
     method: 'post',
   })
 }
-//新增文章
-export const addArticle = (data) => {
+//新增或修改文章
+export const addOrEditArticle = (data) => {
   return request({
-    url: '/public/addArticle',
+    url: '/admin/article/editOrAdd',
     method: 'post',
     data
   })
 }
-
+export const changeArticleStatus = (data) => {
+  return request({
+    url: '/admin/article/changeStatus',
+    method: 'post',
+    data
+  })
+}
+//删除文章
+export const delArticle = (data) => {
+  return request({
+    url: '/admin/article/del',
+    method: 'post',
+    data
+  })
+}
 //获取所有标签列表
 export const getAllTag = () => {
   return request({
