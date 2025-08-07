@@ -129,10 +129,14 @@
         </div>
       </template>
       <template #default>
-        <EditArticle
+        <!-- <EditArticle
           :tagList="tagList"
           @Update:showArticleDialog="updateArticleDialog"
-          :content="content"></EditArticle>
+          :content="content"></EditArticle> -->
+        <EditArticleByPlugin
+          :tagList="tagList"
+          @Update:showArticleDialog="updateArticleDialog"
+          :content="content" />
       </template>
     </el-dialog>
     <!-- 标签管理 -->
@@ -179,6 +183,7 @@ import {
   delTag,
 } from "@/api/article";
 import EditArticle from "../components/editArticle.vue";
+import EditArticleByPlugin from "../components/editArticleByPlugin.vue";
 import { timeFormatter } from "/src/utils/timeFormatter";
 import { ElMessage } from "element-plus";
 
