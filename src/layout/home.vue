@@ -41,7 +41,7 @@
 import { onMounted, ref } from "vue";
 import { routes } from "@/router/routes";
 import { useRouter } from "vue-router";
-import MenuList from "@/components/menu/menu-list.vue";
+import MenuList from "@/components/menuList.vue";
 const user = ref();
 const router = useRouter();
 const logout = () => {

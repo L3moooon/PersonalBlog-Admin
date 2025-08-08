@@ -49,7 +49,7 @@
               v-for="(item, index) in scope.row.tag"
               :key="index"
               :disable-transitions="false">
-              {{ item }}
+              {{ item.name }}
             </el-tag>
           </div>
         </template>
@@ -297,12 +297,21 @@ onMounted(() => {
   .function {
     margin-bottom: 10px;
   }
+  .table-img {
+    width: 80px;
+    height: 80px;
+  }
 }
 .top {
-  height: 100%;
+  width: 100%;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  background-color: #fff;
   .back {
     position: absolute;
     left: 10px;
@@ -315,7 +324,7 @@ onMounted(() => {
   padding: 0;
   border-radius: 0;
   .el-dialog__header {
-    height: 40px;
+    height: 100px;
     padding: 0;
   }
 }

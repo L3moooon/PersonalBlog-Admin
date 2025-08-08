@@ -32,6 +32,14 @@ export const routes = [
           hidden: false
         },
       },
+      {
+        path: '/log',
+        component: () => import('@/view/log.vue'),
+        meta: {
+          name: '监控日志',
+          hidden: false
+        },
+      },
     ]
   },
   {
