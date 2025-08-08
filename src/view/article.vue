@@ -107,6 +107,10 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="articleData.length" />
     <!-- 编辑文章 -->
     <el-dialog
       class="article-dialog"
@@ -311,7 +315,7 @@ onMounted(() => {
   position: fixed;
   top: 0;
   z-index: 2;
-  background-color: #fff;
+  background-color: #ffffff;
   .back {
     position: absolute;
     left: 10px;

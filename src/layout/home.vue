@@ -2,7 +2,12 @@
   <div class="container">
     <!-- 左侧菜单 -->
     <div class="left">
-      <div class="logo">博客后台管理系统</div>
+      <div class="logo">
+        <img
+          src="/src/assets/wechat_2025-08-08_151106_370.png"
+          alt="" />
+        <div class="name">博客后台管理系统</div>
+      </div>
       <el-menu popper-class="menu">
         <MenuList
           :menuList="routes"
@@ -64,7 +69,16 @@ onMounted(() => {
     width: 15%;
     .logo {
       height: 80px;
-      background-color: aquamarine;
+      background-color: #f3f2ef;
+      display: flex;
+      img {
+        // width: 100%;
+        height: 100%;
+        margin-left: 20px;
+      }
+      .name {
+        margin: 55px 0 0 20px;
+      }
     }
   }
   .right {
