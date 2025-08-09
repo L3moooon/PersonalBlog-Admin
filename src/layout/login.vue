@@ -1,74 +1,95 @@
 <template>
   <div class="background">
-    <div
-      class="login-container"
-      v-if="!showRegister">
-      <span>这里是博客的后台管理系统</span>
-      <!-- 登录 -->
-      <el-form
-        :model="loginForm"
-        :rules="loginRules"
-        ref="loginFormRef"
-        label-position="top">
-        <el-form-item
-          label="账号:"
-          prop="account">
-          <el-input v-model="loginForm.account" />
-        </el-form-item>
-        <el-form-item
-          label="密码:"
-          prop="password">
-          <el-input v-model="loginForm.password" />
-        </el-form-item>
-        <el-button @click="login(loginFormRef)">登录</el-button>
-      </el-form>
-      <div class="func">
-        <div
-          class="forget"
-          @click="forgetPwd">
-          忘记密码？
-        </div>
-        <div
-          class="register"
-          @click="register">
-          注册
-        </div>
+    <div class="login-container">
+      <div class="img">
+        <img
+          src="/src/assets/微信图片_20250804164132_7.png"
+          alt="" />
       </div>
-    </div>
-    <!-- 注册 -->
-    <div
-      class="register-container"
-      v-else>
-      <span>注册账号</span>
-      <el-form
-        :rules="registerRules"
-        ref="registerFormRef"
-        :model="registerForm"
-        label-position="top">
-        <el-form-item
-          label="昵称:"
-          prop="name">
-          <el-input v-model="registerForm.name" />
-        </el-form-item>
-        <el-form-item
-          label="账号:"
-          prop="account">
-          <el-input v-model="registerForm.account" />
-        </el-form-item>
-        <el-form-item
-          label="密码:"
-          prop="password">
-          <el-input v-model="registerForm.password" />
-        </el-form-item>
-        <el-button @click="createNewCount(registerFormRef)">注册账号</el-button>
-      </el-form>
-      <div class="func">
-        <div
-          class="forget"
-          @click="showRegister = false">
-          <div>已有账号？<el-button>登录</el-button></div>
-        </div>
-      </div>
+      <div class="title">时雨博客后台</div>
+      <el-tabs
+        v-model="activeName"
+        class="demo-tabs"
+        @tab-click="handleClick">
+        <el-tab-pane
+          label="账号登录"
+          name="first">
+          <!-- 登录 -->
+          <el-form
+            :model="loginForm"
+            :rules="loginRules"
+            ref="loginFormRef"
+            label-position="top">
+            <el-form-item
+              label="账号:"
+              prop="account">
+              <el-input v-model="loginForm.account" />
+            </el-form-item>
+            <el-form-item
+              label="密码:"
+              prop="password">
+              <el-input v-model="loginForm.password" />
+            </el-form-item>
+            <el-button
+              class="login"
+              @click="login(loginFormRef)"
+              type="primary"
+              >登录</el-button
+            >
+          </el-form>
+          <div class="func">
+            <el-button
+              class="forget"
+              @click="forgetPwd">
+              忘记密码？
+            </el-button>
+            <el-button
+              class="register"
+              @click="register">
+              注册
+            </el-button>
+          </div></el-tab-pane
+        >
+        <el-tab-pane
+          label="免密登录"
+          name="second"
+          >Config</el-tab-pane
+        >
+        <el-tab-pane
+          label="注册"
+          name="third">
+          <!-- 注册 -->
+          <div class="register-container">
+            <el-form
+              :rules="registerRules"
+              ref="registerFormRef"
+              :model="registerForm"
+              label-position="top">
+              <el-form-item
+                label="昵称:"
+                prop="name">
+                <el-input v-model="registerForm.name" />
+              </el-form-item>
+              <el-form-item
+                label="账号:"
+                prop="account">
+                <el-input v-model="registerForm.account" />
+              </el-form-item>
+              <el-form-item
+                label="密码:"
+                prop="password">
+                <el-input v-model="registerForm.password" />
+              </el-form-item>
+              <el-button
+                class="register-btn"
+                @click="createNewCount(registerFormRef)"
+                type="primary"
+                >注册账号</el-button
+              >
+            </el-form>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -81,6 +102,10 @@ import { ElMessage } from "element-plus";
 import { useUserStore } from "../store/user";
 const router = useRouter();
 
+const activeName = ref("first");
+const handleClick = (tab, event) => {
+  console.log(tab, event);
+};
 const showRegister = ref(false);
 const loginFormRef = ref();
 const registerFormRef = ref();
@@ -168,7 +193,8 @@ const login = async (formEl) => {
 };
 //注册
 const register = () => {
-  showRegister.value = true;
+  // showRegister.value = true;
+  activeName.value = "third";
 };
 const createNewCount = async (formEl) => {
   if (!formEl) return;
@@ -199,20 +225,63 @@ const createNewCount = async (formEl) => {
   position: relative;
   width: 100%;
   height: 100vh;
-  // background-image: url("../assets/bamboo.png");
+  background-color: #cebeaf;
   background-repeat: no-repeat;
   background-size: cover;
-  .login-container,
-  .register-container {
+  .login-container {
     width: 500px;
-    height: 350px;
-    background-color: rgba($color: #ccc, $alpha: 0.8);
+    height: 400px;
+    background-color: #fff;
     border-radius: 10px;
     position: absolute;
     right: 0;
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%);
-    margin-right: 20px;
+    transform: translateY(-50%) translateX(-50%);
+    .img {
+      width: 200px;
+      height: 200px;
+      position: absolute;
+      left: 50%;
+      top: -49%;
+      transform: translateX(-36%);
+      z-index: -1;
+      img {
+        width: 100%;
+      }
+    }
+    .title {
+      width: 100%;
+      text-align: center;
+      font-size: 22px;
+      margin: 15px 0 10px 0;
+    }
+    .login {
+      width: 100%;
+      margin-top: 5px;
+    }
+    .func {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      .forget,
+      .register {
+        width: 49%;
+      }
+    }
+    .register-btn {
+      width: 100%;
+      margin-top: 5px;
+    }
   }
+}
+:deep(.el-tabs__nav) {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+:deep(.el-tabs__content) {
+  padding: 0 50px;
 }
 </style>

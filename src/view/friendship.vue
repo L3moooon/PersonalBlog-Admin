@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>这里是友情链接</div>
 </template>
 
 <script setup></script>

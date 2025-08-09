@@ -11,8 +11,7 @@ export const timeFormatter = (isoTime) => {
     second: "2-digit",
     hour12: false // 24小时制
   }).replace(/\//g, "-").replace(", ", " ");
-
-  console.log(formattedDate); // 输出: 2025-08-01 11:25:26
+  // console.log(formattedDate);
   return formattedDate
 }
 

@@ -107,10 +107,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
       background
       layout="prev, pager, next"
-      :total="articleData.length" />
+      :total="articleData.length" /> -->
     <!-- 编辑文章 -->
     <el-dialog
       class="article-dialog"
