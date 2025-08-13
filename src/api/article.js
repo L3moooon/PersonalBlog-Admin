@@ -1,4 +1,4 @@
-import request from "./index";
+import request from "../utils/request";
 //获取所有文章列表
 export const getAllArticle = () => {
   return request({
