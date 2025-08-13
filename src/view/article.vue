@@ -77,6 +77,10 @@
         label="点赞量"
         width="80" />
       <el-table-column
+        prop="comment_count"
+        label="评论量"
+        width="80" />
+      <el-table-column
         fixed="right"
         label="操作"
         min-width="120">
@@ -90,6 +94,15 @@
             inactive-text="隐藏"
             @change="changeStatus(scope.row)"
             style="margin-right: 10px" />
+          <el-switch
+            v-model="scope.row.top"
+            inline-prompt
+            :active-value="1"
+            :inactive-value="0"
+            active-text="置顶文章"
+            inactive-text="取消置顶"
+            @change="changeTop(scope.row)"
+            style="margin-right: 10px" />
           <el-button
             link
             type="primary"
@@ -101,7 +114,7 @@
             link
             type="primary"
             size="small"
-            @click="delArticle(scope.row)">
+            @click="delConfirm(scope.row.id)">
             删除
           </el-button>
         </template>
@@ -173,6 +186,24 @@
         </el-button>
       </div>
     </el-dialog>
+    <!-- 删除确认 -->
+    <el-dialog
+      v-model="showDelDialog"
+      title="确认删除"
+      width="500"
+      :before-close="handleClose">
+      <span>删除后无法恢复，确认删除？</span>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="showDelDialog = false">取消</el-button>
+          <el-button
+            type="primary"
+            @click="confirm">
+            确认
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -181,6 +212,7 @@ import { onMounted, ref, reactive, nextTick } from "vue";
 import {
   getAllArticle,
   changeArticleStatus,
+  changeArticleTop,
   delArticle as del,
   getAllTag,
   addTag,
@@ -194,6 +226,7 @@ import { ElMessage } from "element-plus";
 const articleData = ref();
 const showArticleDialog = ref(false);
 const showTagDialog = ref(false);
+const showDelDialog = ref(false);
 
 const tagList = ref([]);
 const EditOrAdd = ref(0);
@@ -202,7 +235,7 @@ const content = ref(null);
 const inputValue = ref("");
 const inputVisible = ref(false);
 const inputRef = ref(null);
-
+//控制文章显隐
 const changeStatus = async (row) => {
   console.log(row);
   const { status } = await changeArticleStatus({
@@ -213,28 +246,49 @@ const changeStatus = async (row) => {
     ElMessage.success("操作成功");
   }
 };
-
+//控制文章置顶
+const changeTop = async (row) => {
+  console.log(row);
+  const { status } = await changeArticleTop({
+    id: row.id,
+    top: row.top,
+  });
+  if (status == 1) {
+    ElMessage.success("操作成功");
+  }
+};
 const back = () => {
   //TODO 保留草稿功能
   showArticleDialog.value = false;
 };
-
+//编辑文章
 const editArticle = (row) => {
   EditOrAdd.value = 0;
   content.value = row;
   showArticleDialog.value = true;
 };
+//编辑完成后更新文章
 const updateArticleDialog = (data) => {
   showArticleDialog.value = data;
   getArticleList();
 };
-const delArticle = async (row) => {
-  const { status } = await del({ id: row.id });
+const delAimId = ref(null);
+//删除确认
+const delConfirm = (id) => {
+  showDelDialog.value = true;
+  delAimId.value = id;
+  console.log(delAimId.value);
+};
+//确认删除
+const confirm = async () => {
+  const { status } = await del({ id: delAimId.value });
   if (status == 1) {
     ElMessage.success("删除成功");
     getArticleList();
+    showDelDialog.value = false;
   }
 };
+//发布文章按钮
 const publishArticle = () => {
   showArticleDialog.value = true;
   EditOrAdd.value = 1;

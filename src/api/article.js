@@ -22,6 +22,14 @@ export const changeArticleStatus = (data) => {
     data
   })
 }
+//更改文章置顶状态
+export const changeArticleTop = (data) => {
+  return request({
+    url: '/admin/article/changeTop',
+    method: 'post',
+    data
+  })
+}
 //删除文章
 export const delArticle = (data) => {
   return request({

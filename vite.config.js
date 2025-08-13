@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from "path";
-const target = 'http://localhost:3001/dev-api/'
+const target = 'http://182.92.105.35:3000'
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -15,6 +15,13 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'cross-origin',
     },
     proxy: {
+      '/': {
+        target,
+        changeOrigin: true,
+        // pathRewrite: {
+        //   '^/web': ''
+        // }
+      },
       // '/home': {
       //   target, // 后端 API 地址
       //   changeOrigin: true, // 允许跨域

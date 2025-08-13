@@ -41,9 +41,6 @@
         prop="like_count"
         label="点赞量"></el-table-column>
       <el-table-column
-        prop="unlike_count"
-        label="点踩量"></el-table-column>
-      <el-table-column
         fixed="right"
         label="操作"
         min-width="120">
@@ -61,7 +58,7 @@
             link
             type="primary"
             size="small"
-            @click="delArticle(scope.row)">
+            @click="del(scope.row.id)">
             删除
           </el-button>
         </template>
@@ -72,14 +69,27 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { getAllComments } from "../api/comment";
+import { getAllComments, delComments } from "../api/comment";
 import { timeFormatter } from "../utils/timeFormatter";
+import { ElMessage } from "element-plus";
 const commentData = ref();
 //获取评论列表
 const getList = async () => {
   const { data } = await getAllComments();
   commentData.value = data;
   console.log(commentData.value);
+};
+//删除评论
+const del = async (id) => {
+  console.log(id);
+
+  const { status } = await delComments({ id: id });
+  if (status == 1) {
+    ElMessage.success("删除成功");
+    getList();
+  } else {
+    ElMessage.error("删除失败");
+  }
 };
 onMounted(() => {
   getList();
