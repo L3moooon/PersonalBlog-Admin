@@ -32,9 +32,11 @@
         label="封面">
         <template #default="scope">
           <el-image
+            v-if="scope.row.cover_img"
             class="table-img"
             :src="scope.row.cover_img"
             alt="" />
+          <div v-else>暂无封面</div>
         </template>
       </el-table-column>
       <el-table-column

@@ -1,8 +1,8 @@
-import request from "./index";
+import request from "@/utils/request";
 //获取用户主题相关信息
 export const getThemeInfo = () => {
   return request({
-    url: '/web/website/theme',
+    url: '/admin/webInfo/theme',
     method: 'post',
   })
 }

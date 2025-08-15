@@ -1,4 +1,4 @@
-import request from "./index";
+import request from "@/utils/request";
 //获取所有用户列表
 export const getList = (data) => {
   return request({

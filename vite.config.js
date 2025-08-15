@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from "path";
-const target = 'http://182.92.105.35:3000'
-// const target = 'http://127.0.0.1:3000'
+// const target = 'http://182.92.105.35:3000'
+const target = 'http://127.0.0.1:3000'
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -24,6 +24,11 @@ export default defineConfig({
         target,
         changeOrigin: true,
       },
+      '/external': {
+        target: 'https://v1.jinrishici.com', // 外部目标地址
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/external/, ''), // 重写路径为空
+      }
     },
   },
   optimizeDeps: {

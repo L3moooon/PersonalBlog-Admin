@@ -1,4 +1,4 @@
-import request from "../utils/request";
+import request from "@/utils/request";
 //获取所有评论列表
 export const getAllComments = () => {
   return request({
