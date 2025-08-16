@@ -41,7 +41,11 @@
       </el-table-column>
       <el-table-column
         prop="abstract"
-        label="简介" />
+        label="简介">
+        <template #default="scope">
+          <span>{{ scope.row.abstract || "暂无简介" }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="tag"
         label="标签">

@@ -52,7 +52,7 @@
             :active-value="1"
             :inactive-value="0"
             active-text="启用"
-            inactive-text="禁止"
+            inactive-text="禁用"
             @change=""
             style="margin-right: 10px" />
           <el-button
