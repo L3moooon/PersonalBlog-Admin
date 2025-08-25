@@ -19,7 +19,7 @@
             :model="loginForm"
             :rules="loginRules"
             ref="loginFormRef"
-            label-position="top">
+            label-position="left">
             <el-form-item
               label="账号:"
               prop="account">
@@ -52,9 +52,50 @@
         >
         <el-tab-pane
           label="免密登录"
-          name="second"
-          >Config</el-tab-pane
-        >
+          name="second">
+          <el-form
+            :model="loginForm"
+            :rules="loginRules"
+            ref="loginFormRef"
+            label-width="auto"
+            label-position="left">
+            <el-form-item
+              label="邮箱:"
+              prop="account">
+              <el-input v-model="loginForm.account" />
+            </el-form-item>
+            <el-form-item
+              label="验证码:"
+              prop="password">
+              <el-input v-model="loginForm.password">
+                <template #append>
+                  <el-button
+                    class="code"
+                    @click="login(loginFormRef)"
+                    >获取验证码</el-button
+                  ></template
+                >
+              </el-input>
+            </el-form-item>
+
+            <el-button
+              class="login"
+              @click="login(loginFormRef)"
+              type="primary"
+              >登录</el-button
+            >
+            <el-form-item label="其他登录方式:">
+              <img
+                src=""
+                class="qq"
+                alt="" />
+              <img
+                src=""
+                class="wechat"
+                alt="" />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
         <el-tab-pane
           label="注册"
           name="third">
@@ -64,7 +105,7 @@
               :rules="registerRules"
               ref="registerFormRef"
               :model="registerForm"
-              label-position="top">
+              label-position="left">
               <el-form-item
                 label="昵称:"
                 prop="name">
@@ -230,7 +271,7 @@ const createNewCount = async (formEl) => {
   background-size: cover;
   .login-container {
     width: 500px;
-    height: 400px;
+    height: 320px;
     background-color: #fff;
     border-radius: 10px;
     position: absolute;
@@ -243,7 +284,7 @@ const createNewCount = async (formEl) => {
       height: 200px;
       position: absolute;
       left: 50%;
-      top: -49%;
+      top: -61%;
       transform: translateX(-36%);
       z-index: -1;
       img {
@@ -256,9 +297,13 @@ const createNewCount = async (formEl) => {
       font-size: 22px;
       margin: 15px 0 10px 0;
     }
+    .code {
+      // width: 80px;
+    }
     .login {
       width: 100%;
       margin-top: 5px;
+      margin-left: 0;
     }
     .func {
       width: 100%;
@@ -282,6 +327,6 @@ const createNewCount = async (formEl) => {
   justify-content: space-around;
 }
 :deep(.el-tabs__content) {
-  padding: 0 50px;
+  padding: 5px 50px;
 }
 </style>
