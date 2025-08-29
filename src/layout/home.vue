@@ -6,7 +6,7 @@
         <img
           src="/src/assets/images/portrait.jpg"
           alt="" />
-        <!-- <div class="name">时雨博客后台管理系统</div> -->
+        <div class="name">时雨博客后台管理系统</div>
       </div>
       <el-menu popper-class="menu">
         <MenuList
@@ -68,16 +68,19 @@ onMounted(() => {
   .left {
     width: 15%;
     .logo {
-      height: 120px;
+      height: 90px;
       background-color: #f3f2ef;
-      // display: flex;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #badfc3, #fad86f);
       img {
         // width: 100%;
-        height: 100px;
+        height: 80px;
         margin-left: 20px;
+        border-radius: 10px;
       }
       .name {
-        // margin: 55px 0 0 20px;
+        margin: 55px 0 0 20px;
       }
     }
   }

@@ -7,11 +7,10 @@
       v-if="!item.meta.hidden && item.children"
       :index="item.path">
       <template #title>
-        <svg
+        <img
           class="icon"
-          aria-hidden="true">
-          <use :xlink:href="item.meta.icon"></use>
-        </svg>
+          :src="item.meta.icon"
+          alt="" />
         <span>{{ item.meta.name }}</span>
       </template>
       <MenuList :menuList="item.children"></MenuList>
@@ -28,11 +27,10 @@
       :index="item.path"
       @click="goRoute">
       <template #title>
-        <svg
+        <img
           class="icon"
-          aria-hidden="true">
-          <use :xlink:href="item.meta.icon"></use>
-        </svg>
+          :src="item.meta.icon"
+          alt="" />
         <span>{{ item.meta.name }}</span>
       </template>
     </el-menu-item>
@@ -52,6 +50,7 @@ const goRoute = (vc) => {
 
 <style lang="scss" scoped>
 .icon {
+  width: 16px;
   margin-right: 0.8rem;
 }
 // .el-menu-item:active {
