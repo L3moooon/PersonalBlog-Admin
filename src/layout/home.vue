@@ -4,9 +4,9 @@
     <div class="left">
       <div class="logo">
         <img
-          src="/src/assets/wechat_2025-08-08_151106_370.png"
+          src="/src/assets/images/portrait.jpg"
           alt="" />
-        <div class="name">博客后台管理系统</div>
+        <!-- <div class="name">时雨博客后台管理系统</div> -->
       </div>
       <el-menu popper-class="menu">
         <MenuList
@@ -68,16 +68,16 @@ onMounted(() => {
   .left {
     width: 15%;
     .logo {
-      height: 80px;
+      height: 120px;
       background-color: #f3f2ef;
-      display: flex;
+      // display: flex;
       img {
         // width: 100%;
-        height: 100%;
+        height: 100px;
         margin-left: 20px;
       }
       .name {
-        margin: 55px 0 0 20px;
+        // margin: 55px 0 0 20px;
       }
     }
   }

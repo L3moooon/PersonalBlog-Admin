@@ -1,29 +1,46 @@
 <template>
-  <div class="article-container">
-    <div class="title">本栏用于管理前台所有发布的文章</div>
-    <div class="function">
-      <el-button
-        type="primary"
-        @click="publishArticle">
-        发布文章
-      </el-button>
-      <el-button
-        type="primary"
-        @click="tagManagement">
-        标签管理
-      </el-button>
-      <span>日期筛选</span>
-      <span>搜索</span>
-    </div>
+  <el-card>
+    <el-row>
+      <el-col :span="16">
+        <el-button
+          type="primary"
+          @click="publishArticle">
+          发布文章
+        </el-button>
+        <el-button
+          type="primary"
+          @click="tagManagement">
+          标签管理
+        </el-button>
+      </el-col>
+      <el-col :span="8">
+        <div class="func">
+          <el-date-picker
+            v-model="dateRange"
+            type="daterange"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            @calendar-change="getArticle"
+            :size="size" />
+          <el-input
+            v-model="searchKey"
+            @change="throttledGetArticle"
+            :prefix-icon="Search"
+            placeholder="请输入搜索关键字"></el-input>
+        </div>
+      </el-col>
+    </el-row>
     <el-table
       :data="articleData"
       show-overflow-tooltip
-      stripe
-      style="width: 100%">
+      style="margin: 10px 0px"
+      border
+      stripe>
       <el-table-column
         prop="id"
         label="id"
-        width="80" />
+        align="center"
+        width="60" />
       <el-table-column
         prop="title"
         label="标题" />
@@ -62,34 +79,43 @@
       </el-table-column>
       <el-table-column
         prop="publish_date"
-        label="发布时间">
+        label="发布时间"
+        sortable>
         <template #default="scope">
-          {{ timeFormatter(scope.row.publish_date) }}
+          <span v-timeFormatter="scope.row.publish_date"></span>
         </template>
       </el-table-column>
       <el-table-column
         prop="last_edit_Date"
-        label="最后更新时间">
+        label="最后更新时间"
+        sortable>
         <template #default="scope">
-          {{ timeFormatter(scope.row.last_edit_date) }}
+          <span v-timeFormatter="scope.row.last_edit_date"></span>
         </template>
       </el-table-column>
       <el-table-column
         prop="view"
         label="访问量"
-        width="80" />
+        sortable
+        align="center"
+        width="100" />
       <el-table-column
         prop="like"
         label="点赞量"
-        width="80" />
+        sortable
+        align="center"
+        width="100" />
       <el-table-column
         prop="comment_count"
         label="评论量"
-        width="80" />
+        sortable
+        align="center"
+        width="100" />
       <el-table-column
         fixed="right"
         label="操作"
-        min-width="120">
+        width="240"
+        min-width="240">
         <template #default="scope">
           <el-switch
             v-model="scope.row.status"
@@ -126,91 +152,96 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <el-pagination
-      background
-      layout="prev, pager, next"
-      :total="articleData.length" /> -->
-    <!-- 编辑文章 -->
-    <el-dialog
-      class="article-dialog"
-      fullscreen
-      v-model="showArticleDialog"
-      @closed="clearData"
-      :destroy-on-close="true"
-      :show-close="false">
-      <template #title>
-        <div class="top">
-          <el-button
-            class="back"
-            @click="back">
-            <img
-              src="/src/assets/icons/back.png"
-              alt="" />
-            <span>返回</span>
-          </el-button>
-          <div>{{ EditOrAdd ? "发布文章" : "编辑文章" }}</div>
-        </div>
-      </template>
-      <template #default>
-        <!-- <EditArticle
+    <el-pagination
+      v-model:current-page="pagination.pageNo"
+      v-model:page-size="pagination.pageSize"
+      :page-sizes="[10, 20, 30, 40]"
+      :background="true"
+      layout="prev, pager, next, jumper,->,sizes,total"
+      :total="pagination.total"
+      @current-change="getHasRole"
+      @size-change="sizeChange" />
+  </el-card>
+  <!-- 编辑文章 -->
+  <el-dialog
+    class="article-dialog"
+    fullscreen
+    v-model="showArticleDialog"
+    @closed="clearData"
+    :destroy-on-close="true"
+    :show-close="false">
+    <template #title>
+      <div class="top">
+        <el-button
+          class="back"
+          @click="back">
+          <img
+            src="/src/assets/icons/back.png"
+            alt="" />
+          <span>返回</span>
+        </el-button>
+        <div>{{ EditOrAdd ? "发布文章" : "编辑文章" }}</div>
+      </div>
+    </template>
+    <template #default>
+      <!-- <EditArticle
           :tagList="tagList"
           @Update:showArticleDialog="updateArticleDialog"
           :content="content"></EditArticle> -->
-        <EditArticleByPlugin
-          :tagList="tagList"
-          @Update:showArticleDialog="updateArticleDialog"
-          :content="content" />
-      </template>
-    </el-dialog>
-    <!-- 标签管理 -->
-    <el-dialog
-      v-model="showTagDialog"
-      title="标签管理">
-      <div class="tag-container">
-        <el-tag
-          v-for="item in tagList"
-          :key="item.id"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(item.id)">
-          {{ item.tag_name }}
-        </el-tag>
-        <el-input
-          v-if="inputVisible"
-          ref="inputRef"
-          v-model="inputValue"
-          class="w-20"
-          size="small"
-          @keyup.enter="handleInputConfirm"
-          @blur="handleInputConfirm" />
+      <EditArticleByPlugin
+        :tagList="tagList"
+        @Update:showArticleDialog="updateArticleDialog"
+        :content="content" />
+    </template>
+  </el-dialog>
+  <!-- 标签管理 -->
+  <el-dialog
+    v-model="showTagDialog"
+    title="标签管理">
+    <div class="tag-container">
+      <el-tag
+        v-for="item in tagList"
+        :key="item.id"
+        closable
+        :disable-transitions="false"
+        @close="handleClose(item.id)">
+        {{ item.tag_name }}
+      </el-tag>
+      <el-input
+        v-if="tagInputVisible"
+        ref="tagInputRef"
+        v-model="tagInput"
+        class="w-20"
+        size="small"
+        @keyup.enter="handleInputConfirm"
+        @blur="handleInputConfirm" />
+      <el-button
+        v-else
+        class="button-new-tag"
+        size="small"
+        @click="showInput">
+        + 新增标签
+      </el-button>
+    </div>
+  </el-dialog>
+  <!-- 删除确认 -->
+  <el-dialog
+    v-model="showDelDialog"
+    title="确认删除"
+    width="500"
+    :before-close="handleClose">
+    <span>删除后无法恢复，确认删除？</span>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="showDelDialog = false">取消</el-button>
         <el-button
-          v-else
-          class="button-new-tag"
-          size="small"
-          @click="showInput">
-          + 新增标签
+          type="primary"
+          @click="confirm">
+          确认
         </el-button>
       </div>
-    </el-dialog>
-    <!-- 删除确认 -->
-    <el-dialog
-      v-model="showDelDialog"
-      title="确认删除"
-      width="500"
-      :before-close="handleClose">
-      <span>删除后无法恢复，确认删除？</span>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="showDelDialog = false">取消</el-button>
-          <el-button
-            type="primary"
-            @click="confirm">
-            确认
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
-  </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -226,21 +257,30 @@ import {
 } from "@/api/article";
 import EditArticle from "../components/editArticle.vue";
 import EditArticleByPlugin from "../components/editArticleByPlugin.vue";
-import { timeFormatter } from "/src/utils/timeFormatter";
 import { ElMessage } from "element-plus";
+import { Search } from "@element-plus/icons-vue";
+import { throttle } from "lodash-es";
 
 const articleData = ref();
 const showArticleDialog = ref(false);
-const showTagDialog = ref(false);
 const showDelDialog = ref(false);
-
-const tagList = ref([]);
+const delAimId = ref(null); //删除文章的id
 const EditOrAdd = ref(0);
 const content = ref(null);
 
-const inputValue = ref("");
-const inputVisible = ref(false);
-const inputRef = ref(null);
+const showTagDialog = ref(false);
+const tagList = ref([]);
+const tagInput = ref("");
+const tagInputVisible = ref(false);
+const tagInputRef = ref(null);
+
+const dateRange = ref([]);
+const searchKey = ref("");
+const pagination = reactive({
+  pageNo: 1,
+  pageSize: 10,
+  total: 0,
+});
 //控制文章显隐
 const changeStatus = async (row) => {
   console.log(row);
@@ -276,9 +316,8 @@ const editArticle = (row) => {
 //编辑完成后更新文章
 const updateArticleDialog = (data) => {
   showArticleDialog.value = data;
-  getArticleList();
+  getArticle();
 };
-const delAimId = ref(null);
 //删除确认
 const delConfirm = (id) => {
   showDelDialog.value = true;
@@ -290,8 +329,8 @@ const confirm = async () => {
   const { status } = await del({ id: delAimId.value });
   if (status == 1) {
     ElMessage.success("删除成功");
-    getArticleList();
     showDelDialog.value = false;
+    getArticle();
   }
 };
 //发布文章按钮
@@ -308,23 +347,23 @@ const tagManagement = async () => {
   console.log(data);
 };
 const showInput = () => {
-  inputVisible.value = true;
+  tagInputVisible.value = true;
   nextTick(() => {
-    inputRef.value.input.focus();
+    tagInputRef.value.input.focus();
   });
 };
 //新增标签
 const handleInputConfirm = async () => {
-  if (inputValue.value) {
-    // dynamicTags.value.push(inputValue.value);
-    const { status } = await addTag({ name: inputValue.value });
+  if (tagInput.value) {
+    // dynamicTags.value.push(tagInput.value);
+    const { status } = await addTag({ name: tagInput.value });
     if (status == 1) {
       ElMessage.success("添加成功");
       getTagList();
     }
   }
-  inputVisible.value = false;
-  inputValue.value = "";
+  tagInputVisible.value = false;
+  tagInput.value = "";
 };
 const handleClose = async (id) => {
   const { status } = await delTag({ id: id });
@@ -333,11 +372,21 @@ const handleClose = async (id) => {
     getTagList();
   }
 };
-const getArticleList = async () => {
-  const { data } = await getAllArticle();
-  console.log(data);
-  articleData.value = data;
+//获取文章列表
+const getArticle = async () => {
+  const { data, status, pagination_info } = await getAllArticle({
+    pageNo: pagination.pageNo,
+    pageSize: pagination.pageSize,
+    dateRange: dateRange.value,
+    searchKey: searchKey.value,
+  });
+  if (status == 1) {
+    console.log(data);
+    articleData.value = data;
+    Object.assign(pagination, pagination_info);
+  }
 };
+const throttledGetArticle = throttle(getArticle, 1000);
 const getTagList = async () => {
   const { data } = await getAllTag();
   tagList.value = data;
@@ -345,44 +394,17 @@ const getTagList = async () => {
 };
 
 onMounted(() => {
-  getArticleList();
+  getArticle();
   getTagList();
 });
 </script>
 
 <style lang="scss" scoped>
-.article-container {
-  padding: 10px;
-  .title {
-    height: 40px;
-    color: aliceblue;
-    font-size: 20px;
-  }
-  .function {
-    margin-bottom: 10px;
-  }
-  .table-img {
-    width: 80px;
-    height: 80px;
-  }
-}
-.top {
-  width: 100%;
-  height: 50px;
+.func {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  position: fixed;
-  top: 0;
-  z-index: 2;
-  background-color: #ffffff;
-  .back {
-    position: absolute;
-    left: 10px;
-    img {
-      width: 20px;
-    }
-  }
+  gap: 10px;
 }
 :deep(.el-dialog.article-dialog) {
   padding: 0;

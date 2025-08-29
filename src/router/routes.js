@@ -52,7 +52,7 @@ export const routes = [
     children: [
       {
         path: '/user',
-        component: () => import('@/view/user.vue'),
+        component: () => import('@/view/administrator.vue'),
         meta: {
           name: '用户管理',
           hidden: false

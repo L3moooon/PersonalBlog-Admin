@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <div>本栏用于管理前台文章所有评论</div>
+  <el-card>
     <el-table
       :data="commentData"
+      border
+      stripe
       show-overflow-tooltip>
       <el-table-column
         prop="article_id"
@@ -64,7 +65,7 @@
         </template>
       </el-table-column>
     </el-table>
-  </div>
+  </el-card>
 </template>
 
 <script setup>
@@ -82,7 +83,6 @@ const getList = async () => {
 //删除评论
 const del = async (id) => {
   console.log(id);
-
   const { status } = await delComments({ id: id });
   if (status == 1) {
     ElMessage.success("删除成功");
