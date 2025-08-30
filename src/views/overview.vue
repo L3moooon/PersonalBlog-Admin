@@ -1,5 +1,5 @@
 <template>
-  <div>这里是数据总览</div>
+  <div>我是首页</div>
 </template>
 
 <script setup></script>

@@ -33,14 +33,14 @@
         prop="create_time"
         label="创建时间">
         <template #default="scope">
-          {{ timeFormatter(scope.row.create_time) }}
+          <span v-time="scope.row.create_time"></span>
         </template>
       </el-table-column>
       <el-table-column
         prop="last_login_time"
         label="最后登录时间">
         <template #default="scope">
-          {{ timeFormatter(scope.row.last_login_time) }}
+          <span v-time="scope.row.last_login_time"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -54,7 +54,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { getList } from "/src/api/visitor";
-import { timeFormatter } from "../utils/timeFormatter";
 const userData = ref();
 const getVisitorList = async () => {
   const { data } = await getList();

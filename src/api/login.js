@@ -2,7 +2,7 @@ import request from "@/utils/request";
 //用户登录
 export const login = (data) => {
   return request({
-    url: '/admin/user/login',
+    url: '/admin/administrator/login',
     method: 'post',
     data,
   })
@@ -10,7 +10,7 @@ export const login = (data) => {
 //用户注册
 export const register = (data) => {
   return request({
-    url: '/admin/user/register',
+    url: '/admin/administrator/register',
     method: 'post',
     data,
   })
@@ -18,7 +18,7 @@ export const register = (data) => {
 //用户忘记密码
 export const forgetPassword = (data) => {
   return request({
-    url: '/admin/user/forgetPassword',
+    url: '/admin/administrator/forgetPassword',
     method: 'post',
     data,
   })

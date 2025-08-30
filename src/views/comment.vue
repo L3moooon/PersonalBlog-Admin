@@ -28,14 +28,14 @@
         prop="comment_date"
         label="评论时间">
         <template #default="scope">
-          {{ timeFormatter(scope.row.comment_date) }}
+          <span v-time="scope.row.comment_date"></span>
         </template>
       </el-table-column>
       <el-table-column
         prop="edit_date"
         label="最后编辑时间">
         <template #default="scope">
-          {{ timeFormatter(scope.row.edit_date) }}
+          <span v-time="scope.row.edit_date"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -71,7 +71,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { getAllComments, delComments } from "../api/comment";
-import { timeFormatter } from "../utils/timeFormatter";
 import { ElMessage } from "element-plus";
 const commentData = ref();
 //获取评论列表

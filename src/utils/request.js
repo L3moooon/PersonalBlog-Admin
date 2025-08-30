@@ -8,10 +8,9 @@ let request = axios.create({
 
 request.interceptors.request.use((config) => {
   //获取token，登录成功以后携带给服务器
-  const user = JSON.parse(localStorage.getItem('user'))
-
-  if (user && user.token) {
-    const payload = JSON.parse(atob(user.token.split('.')[1])); // 解析 token 的 payload
+  const token = localStorage.getItem('token')
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1])); // 解析 token 的 payload
     console.log(payload);
     const expirationTime = payload.exp * 1000; // 转换为毫秒
     const currentTime = Date.now();
@@ -22,7 +21,7 @@ request.interceptors.request.use((config) => {
       window.location.href = '/login'; // 跳转到登录页
     } else {
       console.log('Token 未过期');
-      config.headers.token = user.token;
+      config.headers.token = token;
     }
   }
   return config;

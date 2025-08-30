@@ -11,8 +11,8 @@
           label="id"
           width="80"></el-table-column>
         <el-table-column
-          prop="email"
-          label="邮箱"></el-table-column>
+          prop="account"
+          label="账号"></el-table-column>
         <el-table-column
           prop="ip"
           label="ip"></el-table-column>
@@ -33,14 +33,14 @@
           prop="create_time"
           label="创建时间">
           <template #default="scope">
-            {{ timeFormatter(scope.row.create_time) }}
+            <span v-time="scope.row.create_time"></span>
           </template>
         </el-table-column>
         <el-table-column
           prop="last_login_time"
           label="最后登录时间">
           <template #default="scope">
-            {{ timeFormatter(scope.row.last_login_time) }}
+            <span v-time="scope.row.last_login_time"></span>
           </template>
         </el-table-column>
         <el-table-column
@@ -81,12 +81,10 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { getList } from "/src/api/administrator.js";
-import { timeFormatter } from "../utils/timeFormatter";
 const userData = ref();
 const getUserList = async () => {
   const { data } = await getList();
   userData.value = data;
-  console.log(userData.value);
 };
 onMounted(() => {
   getUserList();

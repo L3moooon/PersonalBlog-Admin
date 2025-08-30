@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from 'vue-router'
-import { routes } from './routes'
+import { routes, asyncRoutes, publicRoutes } from './routes'
 import { ElMessage } from 'element-plus'
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
@@ -11,8 +12,8 @@ const router = createRouter({
 })
 //全局前置守卫
 router.beforeEach((to, from, next) => {
-  const user = JSON.parse(localStorage.getItem('user'))
-  if (user && user.token) {
+  const token = localStorage.getItem('token')
+  if (token) {
     next()
   } else {
     if (to.path == '/login') {

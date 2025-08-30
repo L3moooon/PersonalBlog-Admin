@@ -27,11 +27,19 @@
         align="center"
         prop="role_name"></el-table-column>
       <el-table-column
+        label="角色编码"
+        align="center"
+        prop="role_code"></el-table-column>
+      <el-table-column
+        label="角色描述"
+        align="center"
+        prop="description"></el-table-column>
+      <el-table-column
         label="创建时间"
         align="center"
         prop="create_time">
         <template #default="scope">
-          <span v-timeFormatter="scope.row.create_time"></span>
+          <span v-time="scope.row.create_time"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -39,7 +47,7 @@
         align="center"
         prop="update_time">
         <template #default="scope">
-          <span v-timeFormatter="scope.row.update_time"></span>
+          <span v-time="scope.row.update_time"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -91,6 +99,13 @@
           placeholder="请输入角色名称"></el-input>
       </el-form-item>
       <el-form-item
+        label="角色编码"
+        prop="roleCode">
+        <el-input
+          v-model="addForm.roleCode"
+          placeholder="请输入角色编码"></el-input>
+      </el-form-item>
+      <el-form-item
         label="角色描述"
         prop="roleDesc">
         <el-input
@@ -117,7 +132,7 @@
     v-model="permissionDrawer"
     direction="rtl">
     <template #header>
-      <h4>set title by slot</h4>
+      <h4>分配权限</h4>
     </template>
     <template #default>
       <div>
@@ -137,12 +152,12 @@
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="cancelClick">cancel</el-button>
+        <el-button @click="cancelClick">取消</el-button>
         <el-button
           type="primary"
-          @click="confirmClick"
-          >confirm</el-button
-        >
+          @click="confirmClick">
+          确认
+        </el-button>
       </div>
     </template>
   </el-drawer>
@@ -159,6 +174,7 @@ const roleDialog = ref(false);
 const roleList = ref([]);
 const addForm = reactive({
   roleName: "",
+  roleCode: "",
   roleDesc: "",
 });
 const permissionDrawer = ref(false);
@@ -173,6 +189,7 @@ const getList = async () => {
 const addOrEdit = async () => {
   const { status } = await addOrEditRole({
     role_name: addForm.roleName,
+    role_code: addForm.roleCode,
     description: addForm.roleDesc,
   });
   if (status == 1) {

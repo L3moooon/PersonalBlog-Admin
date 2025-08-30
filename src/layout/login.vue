@@ -9,8 +9,7 @@
       <div class="title">时雨博客后台</div>
       <el-tabs
         v-model="activeName"
-        class="demo-tabs"
-        @tab-click="handleClick">
+        class="demo-tabs">
         <el-tab-pane
           label="账号登录"
           name="first">
@@ -28,7 +27,9 @@
             <el-form-item
               label="密码:"
               prop="password">
-              <el-input v-model="loginForm.password" />
+              <el-input
+                v-model="loginForm.password"
+                show-password />
             </el-form-item>
             <el-button
               class="login"
@@ -141,12 +142,12 @@ import { useRouter } from "vue-router";
 import { login as userLogin, register as userRegister } from "../api/login";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "../store/user";
+
 const router = useRouter();
+const userStore = useUserStore();
 
 const activeName = ref("first");
-const handleClick = (tab, event) => {
-  console.log(tab, event);
-};
+
 const showRegister = ref(false);
 const loginFormRef = ref();
 const registerFormRef = ref();
@@ -159,20 +160,19 @@ const registerForm = reactive({
   account: "", //邮箱账号
   password: "", //密码
 });
-
 const loginRules = reactive({
   account: [
     {
       required: true,
       message: "请输入账号",
-      trigger: "blur",
+      trigger: "change",
     },
   ],
   password: [
     {
       required: true,
       message: "请输入密码",
-      trigger: "blur",
+      trigger: "change",
     },
   ],
 });
@@ -204,31 +204,7 @@ const login = async (formEl) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log("submit!");
-      const data = await userLogin({
-        email: loginForm.account,
-        password: loginForm.password,
-      });
-      console.log(data);
-      if (data.status == 1) {
-        //存储token至local
-        localStorage.setItem("user", JSON.stringify(data));
-        //清空表单-跳转至主页
-        router.push("/");
-        loginForm.account = "";
-        loginForm.password = "";
-        ElMessage({
-          type: "success",
-          message: "登录成功",
-        });
-      } else {
-        ElMessage({
-          type: "error",
-          message: "用户名或密码错误",
-        });
-      }
-    } else {
-      console.log("error submit!", fields);
+      userStore.login(loginForm.account, loginForm.password);
     }
   });
 };

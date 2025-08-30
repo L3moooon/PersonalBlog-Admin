@@ -82,7 +82,7 @@
         label="发布时间"
         sortable>
         <template #default="scope">
-          <span v-timeFormatter="scope.row.publish_date"></span>
+          <span v-time="scope.row.publish_date"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -90,7 +90,7 @@
         label="最后更新时间"
         sortable>
         <template #default="scope">
-          <span v-timeFormatter="scope.row.last_edit_date"></span>
+          <span v-time="scope.row.last_edit_date"></span>
         </template>
       </el-table-column>
       <el-table-column
