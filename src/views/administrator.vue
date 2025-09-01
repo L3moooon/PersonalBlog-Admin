@@ -80,14 +80,14 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { getList } from "/src/api/administrator.js";
+import { getAdminList } from "/src/api/administrator.js";
 const userData = ref();
-const getUserList = async () => {
-  const { data } = await getList();
+const getList = async () => {
+  const { data } = await getAdminList();
   userData.value = data;
 };
 onMounted(() => {
-  getUserList();
+  getList();
 });
 </script>
 

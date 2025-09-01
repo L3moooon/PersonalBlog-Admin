@@ -6,11 +6,11 @@
         <img
           src="/src/assets/images/portrait.jpg"
           alt="" />
-        <div class="name">时雨博客后台管理系统</div>
+        <div class="name">时雨博客后台</div>
       </div>
       <el-menu popper-class="menu">
         <MenuList
-          :menuList="routes"
+          :menuList="userStore.menuList"
           router="true"></MenuList>
       </el-menu>
     </div>
@@ -44,20 +44,20 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { routes } from "@/router/routes";
 import { useRouter } from "vue-router";
 import MenuList from "@/components/menuList.vue";
-const user = ref();
+import { useUserStore } from "../store/user";
+const userStore = useUserStore();
+const user = ref(
+  userStore.name || JSON.parse(localStorage.getItem("user")).name
+);
 const router = useRouter();
 const logout = () => {
   localStorage.removeItem("user");
   router.push("/login");
 };
 
-onMounted(() => {
-  user.value = JSON.parse(localStorage.getItem("user")).name;
-  console.log(user.value);
-});
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>

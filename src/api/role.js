@@ -23,10 +23,10 @@ export const delRole = (data) => {
     data
   })
 }
-//获取所有权限
-export const getAllPermission = () => {
+//获取权限列表
+export const getPermissionList = () => {
   return request({
-    url: '/admin/role/getAllPermission',
+    url: '/admin/role/getPermissionList',
     method: 'post',
   })
 }

@@ -14,58 +14,40 @@ import music from '/src/assets/icons/音乐盒-常态@1x.png'
 import friendship from '/src/assets/icons/友情.png'
 
 export const asyncRoutes = [
+
   {
-    path: '/',
-    redirect: 'overview',
-    component: () => import('@/layout/home.vue'),
-    meta: {
-      hidden: true,
-    },
-    children: [
-      {
-        path: '/overview',
-        component: () => import('@/views/overview.vue'),
-        meta: {
-          name: '首页',
-          hidden: false,
-          icon: infoScan
-        },
-      },
-    ],
-  },
-  {
+    name: '网站数据',
     path: '/data',
     redirect: '/data/visitor',
     component: () => import('@/layout/home.vue'),
     meta: {
-      name: '网站数据',
       hidden: false,
       icon: webInfo
     },
     children: [
       {
+        name: '访客列表',
         path: '/data/visitor',
         component: () => import('@/views/visitor.vue'),
         meta: {
-          name: '访客列表',
           hidden: false,
           icon: visitor
         },
       },
       {
+        name: '埋点列表',
         path: '/data/buried',
         component: () => import('@/views/buried.vue'),
         meta: {
-          name: '埋点列表',
           hidden: false,
           icon: buried
         },
       },
       {
+        name: '监控日志',
         path: '/data/log',
         component: () => import('@/views/log.vue'),
         meta: {
-          name: '监控日志',
           hidden: false,
           icon: log
         },
@@ -73,46 +55,46 @@ export const asyncRoutes = [
     ]
   },
   {
+    name: '控制台',
     path: '/workplace',
     component: () => import('@/layout/home.vue'),
     meta: {
-      name: '控制台',
       hidden: false,
       icon: workplace
     },
     children: [
       {
+        name: '用户管理',
         path: '/workplace/user',
         component: () => import('@/views/administrator.vue'),
         meta: {
-          name: '用户管理',
           hidden: false,
           icon: user
         },
       },
       {
+        name: '角色管理',
         path: '/workplace/role',
         component: () => import('@/views/role.vue'),
         meta: {
-          name: '角色管理',
           hidden: false,
           icon: role
         },
       },
       {
+        name: '文章管理',
         path: '/workplace/article',
         component: () => import('@/views/article.vue'),
         meta: {
-          name: '文章管理',
           hidden: false,
           icon: article
         },
       },
       {
+        name: '评论管理',
         path: '/workplace/comment',
         component: () => import('@/views/comment.vue'),
         meta: {
-          name: '评论管理',
           hidden: false,
           icon: comment
         },
@@ -121,38 +103,38 @@ export const asyncRoutes = [
   },
 
   {
+    name: '前台设置',
     path: '/setting',
     redirect: '/setting/theme',
     component: () => import('@/layout/home.vue'),
     meta: {
-      name: '前台设置',
       hidden: false,
       icon: web
     },
     children: [
       {
+        name: '主题设置',
         path: '/setting/theme',
         component: () => import('@/views/theme.vue'),
         meta: {
-          name: '主题设置',
           hidden: false,
           icon: theme
         },
       },
       {
+        name: '音乐盒设置',
         path: '/setting/music',
         component: () => import('@/views/music.vue'),
         meta: {
-          name: '音乐盒设置',
           hidden: false,
           icon: music
         },
       },
       {
+        name: '友链设置',
         path: '/setting/friendship',
         component: () => import('@/views/friendship.vue'),
         meta: {
-          name: '友链设置',
           hidden: false,
           icon: friendship
         },
@@ -162,6 +144,26 @@ export const asyncRoutes = [
 ]
 
 export const publicRoutes = [
+  {
+    path: '/',
+    redirect: 'overview',
+    component: () => import('@/layout/home.vue'),
+    meta: {
+      hidden: true,
+    },
+    children: [
+      {
+        name: '首页',
+        path: '/overview',
+        component: () => import('@/views/overview.vue'),
+        meta: {
+          hidden: false,
+          icon: infoScan
+        },
+      },
+    ],
+  },
+
   {
     path: '/login',
     component: () => import('@/layout/login.vue'),
@@ -184,4 +186,3 @@ export const publicRoutes = [
     },
   }
 ]
-export const routes = [...asyncRoutes, ...publicRoutes] // 实际项目中，asyncRoutes 需动态过滤

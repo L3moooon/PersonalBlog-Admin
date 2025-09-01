@@ -54,7 +54,6 @@
         label="操作"
         width="280px"
         align="center">
-        <!-- row:已有的职位对象 -->
         <template #="{ row, $index }">
           <el-button
             @click="permissionDrawer = true"
@@ -130,32 +129,24 @@
   </el-dialog>
   <el-drawer
     v-model="permissionDrawer"
+    :show-close="false"
     direction="rtl">
     <template #header>
       <h4>分配权限</h4>
     </template>
     <template #default>
-      <div>
-        <el-radio
-          v-model="radio1"
-          value="Option 1"
-          size="large">
-          Option 1
-        </el-radio>
-        <el-radio
-          v-model="radio1"
-          value="Option 2"
-          size="large">
-          Option 2
-        </el-radio>
-      </div>
-    </template>
+      <el-tree
+        style="max-width: 600px"
+        :data="permissionList"
+        :props="defaultProps"
+        show-checkbox
+    /></template>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="cancelClick">取消</el-button>
+        <el-button @click="permissionDrawer = false">取消</el-button>
         <el-button
           type="primary"
-          @click="confirmClick">
+          @click="handlePermissionChange">
           确认
         </el-button>
       </div>
@@ -165,13 +156,18 @@
 
 <script setup>
 import { onMounted, ref, reactive } from "vue";
-import { getRoleList, addOrEditRole } from "@/api/role";
+import { getRoleList, addOrEditRole, getPermissionList } from "@/api/role";
 import { ElMessage } from "element-plus";
 import { Plus, User, Delete, Edit } from "@element-plus/icons-vue";
 
 const roleDialog = ref(false);
 
 const roleList = ref([]);
+const permissionList = ref([]);
+const defaultProps = {
+  children: "children",
+  label: "permission_name",
+};
 const addForm = reactive({
   roleName: "",
   roleCode: "",
@@ -179,10 +175,35 @@ const addForm = reactive({
 });
 const permissionDrawer = ref(false);
 //获取角色列表
-const getList = async () => {
+const getRole = async () => {
   const { data, status } = await getRoleList();
   if (status == 1) {
     roleList.value = data;
+  }
+};
+//获取权限列表
+const getPermission = async () => {
+  const { data, status } = await getPermissionList();
+  if (status == 1) {
+    // console.log(data);
+    // console.log(buildTree(data));
+    permissionList.value = buildTree(data);
+  }
+  //将权限列表转换为树形结构
+  function buildTree(data, parentId = 0) {
+    const tree = [];
+    // 筛选出当前父节点下的所有子节点
+    data.forEach((item) => {
+      if (item.parent_id === parentId) {
+        // 递归查找子节点的子节点
+        const children = buildTree(data, item.id);
+        if (children.length > 0) {
+          item.children = children;
+        }
+        tree.push(item);
+      }
+    });
+    return tree;
   }
 };
 //新增或编辑角色
@@ -197,12 +218,13 @@ const addOrEdit = async () => {
       message: "操作成功",
       type: "success",
     });
-    getList();
+    getRole();
     roleDialog.value = false;
   }
 };
 onMounted(() => {
-  getList();
+  getRole();
+  getPermission();
 });
 </script>
 

@@ -1,10 +1,10 @@
 import { createWebHistory, createRouter } from 'vue-router'
-import { routes, asyncRoutes, publicRoutes } from './routes'
+import { publicRoutes } from './routes'
 import { ElMessage } from 'element-plus'
-
+import { useUserStore } from '@/store/user'
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes: publicRoutes,
   scrollBehavior() {
     // 始终滚动到顶部
     return { top: 0 }
@@ -12,9 +12,15 @@ const router = createRouter({
 })
 //全局前置守卫
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token')
+  const token = useUserStore().token
+  const name = useUserStore().user.name
   if (token) {
-    next()
+    if (!name) {
+      useUserStore().login()
+      next({ ...to })
+    } else {
+      next()
+    }
   } else {
     if (to.path == '/login') {
       next()

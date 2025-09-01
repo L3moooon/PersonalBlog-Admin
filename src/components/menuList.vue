@@ -11,7 +11,7 @@
           class="icon"
           :src="item.meta.icon"
           alt="" />
-        <span>{{ item.meta.name }}</span>
+        <span>{{ item.name }}</span>
       </template>
       <MenuList :menuList="item.children"></MenuList>
     </el-sub-menu>
@@ -31,7 +31,7 @@
           class="icon"
           :src="item.meta.icon"
           alt="" />
-        <span>{{ item.meta.name }}</span>
+        <span>{{ item.name }}</span>
       </template>
     </el-menu-item>
   </template>
