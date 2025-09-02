@@ -141,7 +141,6 @@ export const asyncRoutes = [
     ]
   },
 ]
-
 export const publicRoutes = [
   {
     path: '/',

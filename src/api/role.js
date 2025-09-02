@@ -7,22 +7,24 @@ export const getRoleList = () => {
     method: 'post',
   })
 }
+
 //新增或修改角色
 export const addOrEditRole = (data) => {
   return request({
-    url: '/admin/role/add',
+    url: '/admin/role/addOrEditRole',
     method: 'post',
     data
   })
 }
 //删除角色
-export const delRole = (data) => {
+export const deleteRole = (data) => {
   return request({
-    url: '/admin/role/del',
+    url: '/admin/role/deleteRole',
     method: 'post',
     data
   })
 }
+
 //获取权限列表
 export const getPermissionList = () => {
   return request({
@@ -30,12 +32,19 @@ export const getPermissionList = () => {
     method: 'post',
   })
 }
-//分配权限
-export const allotPermission = (data) => {
+//获取角色权限
+export const getRoleDetail = (data) => {
   return request({
-    url: '/admin/role/allotPermission',
+    url: '/admin/role/getRoleDetail',
     method: 'post',
     data
   })
 }
-//获取角色权限
+//分配权限
+export const assignPermission = (data) => {
+  return request({
+    url: '/admin/role/assignPermission',
+    method: 'post',
+    data
+  })
+}

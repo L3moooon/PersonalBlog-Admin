@@ -22,7 +22,7 @@
           trigger="click"
           placement="bottom">
           <template #reference>
-            <div class="user">
+            <div class="user flex-center">
               <img
                 src="/src/assets/personal.png"
                 alt="" />
@@ -30,7 +30,11 @@
             </div>
           </template>
           <template #default>
-            <div @click="logout">退出登录</div>
+            <div class="func">
+              <div>修改个人信息</div>
+              <div>修改密码</div>
+              <div @click="handleLogout">退出登录</div>
+            </div>
           </template>
         </el-popover>
       </div>
@@ -44,17 +48,14 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 import MenuList from "@/components/menuList.vue";
 import { useUserStore } from "../store/user";
 const userStore = useUserStore();
 const user = ref(
   userStore.name || JSON.parse(localStorage.getItem("user")).name
 );
-const router = useRouter();
-const logout = () => {
-  localStorage.removeItem("user");
-  router.push("/login");
+const handleLogout = () => {
+  userStore.logout();
 };
 
 onMounted(() => {});
@@ -67,6 +68,7 @@ onMounted(() => {});
   display: flex;
   .left {
     width: 15%;
+    min-width: 220px;
     .logo {
       height: 90px;
       background-color: #f3f2ef;
@@ -74,7 +76,6 @@ onMounted(() => {});
       align-items: center;
       background: linear-gradient(135deg, #badfc3, #fad86f);
       img {
-        // width: 100%;
         height: 80px;
         margin-left: 20px;
         border-radius: 10px;
@@ -91,12 +92,16 @@ onMounted(() => {});
       height: 50px;
       background-color: antiquewhite;
       overflow: hidden;
+      display: flex;
+      align-items: center;
       .user {
         width: 100px;
         cursor: pointer;
         margin-left: auto;
+        margin-right: 20px;
         img {
           width: 25px;
+          margin-right: 10px;
         }
       }
     }
