@@ -14,7 +14,6 @@ import music from '/src/assets/icons/音乐盒-常态@1x.png'
 import friendship from '/src/assets/icons/友情.png'
 
 export const asyncRoutes = [
-
   {
     name: '网站数据',
     path: '/data',
@@ -163,7 +162,6 @@ export const publicRoutes = [
       },
     ],
   },
-
   {
     path: '/login',
     component: () => import('@/layout/login.vue'),
@@ -178,6 +176,8 @@ export const publicRoutes = [
       hidden: true
     },
   },
+]
+export const anyRoutes = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/notfound',
